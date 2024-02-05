@@ -1,0 +1,15 @@
+/* post-square.component.css */
+.square {
+  width: 100px;
+  height: 100px;
+  border: 2px solid #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.square:hover {
+  background-color: #f0f0f0;
+}
