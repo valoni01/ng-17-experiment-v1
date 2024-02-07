@@ -1,13 +1,15 @@
-/* post-square.component.css */
 .square {
-  width: 100px;
-  height: 100px;
-  border: 2px solid #333;
+  width: 100%;
+  height: 200px;
+  border: 1px solid lightgrey;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  border-radius: 10px;
+  margin: 5px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  padding: 10px;
 }
 
 .square:hover {

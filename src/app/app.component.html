@@ -1,5 +1,5 @@
-<ng-container *ngrxLet="userDetails$ as userDetails">
+<div class="user-details" *ngrxLet="userDetails$ as userDetails">
   @for (user of userDetails; track user.id) {
-    <app-square></app-square>
+    <app-square [user]="user"></app-square>
   }
-</ng-container>
+</div>

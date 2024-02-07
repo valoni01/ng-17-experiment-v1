@@ -2,17 +2,11 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { ComponentStore, tapResponse } from '@ngrx/component-store';
 import { Observable, exhaustMap } from 'rxjs';
+import { UserDetails } from 'src/app/app.model';
 
 const defaultAppState: UserState = {
   userDetails: [],
 };
-
-interface UserDetails {
-  userId: string | null;
-  id: number | null;
-  title: string;
-  body: string;
-}
 
 export interface UserState {
   userDetails: Array<UserDetails>;
