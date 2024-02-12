@@ -8,7 +8,7 @@
 
 ### Run - npm install (To install dependencies)
 
-### Run - ng server (To run the app locally)
+### Run - ng serve (To run the app locally)
 
 NB: There is less focus on the style, and also no tests were written. styles were very minimal and variables would have been overkill (and wanted more focus on the logic).
 
