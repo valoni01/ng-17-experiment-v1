@@ -1,5 +1,13 @@
 # Ng17
 
+---
+
+Version of Angular user: 17
+State management: NGRX component store
+
+Run - npm install (To install dependencies)
+Run - ng server (To run the app locally)
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.1.
 
 ## Development server
