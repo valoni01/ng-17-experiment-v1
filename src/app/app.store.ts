@@ -1,4 +1,9 @@
-import { DisplayProperty, UserDetails, DisplayProperties } from './app.model';
+import {
+  DisplayProperty,
+  UserDetails,
+  DisplayProperties,
+  UserState,
+} from 'src/app/app.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { ComponentStore, tapResponse } from '@ngrx/component-store';
@@ -8,83 +13,66 @@ const defaultAppState: UserState = {
   userDetails: [],
   displayProperties: [],
   activeSquareIndex: -1,
-  displayedValue: '',
   activeUserId: null,
 };
-
-export interface UserState {
-  userDetails: Array<UserDetails>;
-  displayProperties: Array<DisplayProperties>;
-  displayedValue: string | number;
-  activeSquareIndex: number;
-  activeUserId: number | null;
-}
 
 @Injectable()
 export class AppStore extends ComponentStore<UserState> {
   private httpClient = inject(HttpClient);
-  private readonly _displayProperties: Array<DisplayProperty> = [
+
+  private currentActiveUserIndexProperty = 0;
+
+  private readonly defaultDisplayProperty: DisplayProperty = 'title';
+
+  private readonly displayProperties: Array<DisplayProperty> = [
     'title',
     'body',
     'id',
     'userId',
   ];
-  private readonly _defaultDisplayProperty: DisplayProperty = 'title';
-
-  private _currentActiveUserIndexProperty = 0;
 
   constructor() {
     super(defaultAppState);
   }
 
-  public updateActiveSquareIndex = this.updater(
+  private setActiveSquareIndex = this.updater(
     (state, activeSquareIndex: number) => ({
       ...state,
       activeSquareIndex,
     })
   );
 
-  public setActiveSquareIndex = this.updater(
-    (state, activeSquareIndex: number) => ({
+  private updateActiveUserId = this.updater(
+    (state, activeUserId: number | null) => ({
       ...state,
-      activeSquareIndex,
+      activeUserId,
     })
   );
 
-  public selectActiveSquareIndex$ = this.select(
-    state => state.activeSquareIndex
+  private selectActiveUserId = this.select(state => state.activeUserId);
+
+  // create a copy of the userDetails to show default display properties
+  private setDisplayProperties = this.updater(
+    (state, userDetails: Array<UserDetails>) => {
+      const displayProperties: Array<DisplayProperties> = userDetails.map(
+        user => ({
+          property: this.defaultDisplayProperty,
+          value: user.title,
+        })
+      );
+      return {
+        ...state,
+        displayProperties,
+      };
+    }
   );
 
-  public setDisplayProperty = this.updater(
-    (state, displayedProperty: DisplayProperty) => ({
+  private setUserDetails = this.updater(
+    (state, userDetails: UserDetails[]) => ({
       ...state,
-      displayedProperty,
+      userDetails,
     })
   );
-
-  public selectUserDetails$ = this.select(state => state.userDetails);
-  public selectDisplayedProperties$ = this.select(
-    state => state.displayProperties
-  );
-
-  public selectDisplayProperties$ = this.select(
-    state => state.displayProperties
-  );
-
-  public updateDisplayedProperty = this.updater(
-    (state, displayedProperty: DisplayProperty) => ({
-      ...state,
-      displayedProperty,
-    })
-  );
-
-  public toggleDisplayProperty(): DisplayProperty {
-    this._currentActiveUserIndexProperty =
-      (this._currentActiveUserIndexProperty + 1) %
-      this._displayProperties.length;
-
-    return this._displayProperties[this._currentActiveUserIndexProperty];
-  }
 
   private updateSpecificDisplayPropertiesByIndex = this.updater(
     (state, details: { newDetails: DisplayProperties; index: number }) => {
@@ -95,23 +83,42 @@ export class AppStore extends ComponentStore<UserState> {
     }
   );
 
-  private _updateActiveUserId = this.updater(
-    (state, activeUserId: number | null) => ({
-      ...state,
+  private selectActiveSquareIndex$ = this.select(
+    state => state.activeSquareIndex
+  );
+
+  private selectUserDetails$ = this.select(state => state.userDetails);
+
+  private selectDisplayProperties$ = this.select(
+    state => state.displayProperties
+  );
+
+  private toggleDisplayProperty(): DisplayProperty {
+    this.currentActiveUserIndexProperty =
+      (this.currentActiveUserIndexProperty + 1) % this.displayProperties.length;
+
+    return this.displayProperties[this.currentActiveUserIndexProperty];
+  }
+
+  public readonly getAppState$ = this.select(state => state);
+
+  public readonly appViewModel$ = this.select(
+    this.selectActiveSquareIndex$,
+    this.selectDisplayProperties$,
+    this.selectActiveUserId,
+    (activeSquareIndex, displayProperties, activeUserId) => ({
+      activeSquareIndex,
+      displayProperties,
       activeUserId,
     })
   );
 
-  public onSquareClicked(index: number) {
-    this.kaboom$(index);
-  }
-
-  public kaboom$ = this.effect((index$: Observable<number>) =>
+  public handleSquareClick = this.effect((index$: Observable<number>) =>
     index$.pipe(
       withLatestFrom(
         this.selectUserDetails$,
         this.selectActiveSquareIndex$,
-        this.selectDisplayedProperties$
+        this.selectDisplayProperties$
       ),
       tap(([index, userDetails, activeIndex]) => {
         const currentSquareIndex = activeIndex === -1 ? index : activeIndex;
@@ -120,20 +127,20 @@ export class AppStore extends ComponentStore<UserState> {
         let nextDisplayProperty = this.toggleDisplayProperty();
 
         if (currentSquareIndex !== index) {
-          //reset existing square index
+          // reset existing square index
           this.updateSpecificDisplayPropertiesByIndex({
             newDetails: {
-              property: this._defaultDisplayProperty,
+              property: this.defaultDisplayProperty,
               value:
                 userDetails[currentSquareIndex][
-                  this._defaultDisplayProperty
+                  this.defaultDisplayProperty
                 ]?.toString() || '',
             },
             index: currentSquareIndex,
           });
 
-          //reset display toggle
-          this._currentActiveUserIndexProperty = 0;
+          // reset display toggle
+          this.currentActiveUserIndexProperty = 0;
           nextDisplayProperty = this.toggleDisplayProperty();
         }
 
@@ -145,19 +152,19 @@ export class AppStore extends ComponentStore<UserState> {
           index,
         });
 
-        this._updateActiveUserId(userDetails[index]['id']);
+        this.updateActiveUserId(userDetails[index].id);
       })
     )
   );
 
-  public fetchUserDetails = this.effect(_ =>
+  public getUserDetails = this.effect(_ =>
     _.pipe(
       exhaustMap(_ =>
-        this._fetchUserDetails().pipe(
+        this.fetchUserDetails().pipe(
           tapResponse(
             userDetails => {
-              this._setUserDetails(userDetails);
-              this._setDisplayProperties(userDetails);
+              this.setUserDetails(userDetails);
+              this.setDisplayProperties(userDetails);
             },
             (error: HttpErrorResponse) => alert(error.message)
           )
@@ -166,32 +173,7 @@ export class AppStore extends ComponentStore<UserState> {
     )
   );
 
-  //create a copy of the userDetails to show default display properties
-  private readonly _setDisplayProperties = this.updater(
-    (state, userDetails: Array<UserDetails>) => {
-      const displayProperties: Array<DisplayProperties> = userDetails.map(
-        user => ({
-          property: this._defaultDisplayProperty,
-          value: user.title,
-        })
-      );
-      return {
-        ...state,
-        displayProperties,
-      };
-    }
-  );
-
-  public readonly getAppState$ = this.select(state => state);
-
-  private _setUserDetails = this.updater(
-    (state, userDetails: UserDetails[]) => ({
-      ...state,
-      userDetails,
-    })
-  );
-
-  private _fetchUserDetails(): Observable<UserDetails[]> {
+  private fetchUserDetails(): Observable<UserDetails[]> {
     return this.httpClient.get<UserDetails[]>(
       'https://jsonplaceholder.typicode.com/posts'
     );

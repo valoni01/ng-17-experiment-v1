@@ -10,4 +10,11 @@ export interface DisplayProperties {
   value: string;
 }
 
+export interface UserState {
+  userDetails: Array<UserDetails>;
+  displayProperties: Array<DisplayProperties>;
+  activeSquareIndex: number;
+  activeUserId: number | null;
+}
+
 export type DisplayProperty = keyof UserDetails;

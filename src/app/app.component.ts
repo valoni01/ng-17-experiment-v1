@@ -4,11 +4,18 @@ import { RouterOutlet } from '@angular/router';
 import { SquareComponent } from 'src/app/ui-components/square/square.component';
 import { AppStore } from 'src/app/app.store';
 import { LetDirective } from '@ngrx/component';
+import { HeaderComponent } from 'src/app/ui-components/header/header.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, SquareComponent, LetDirective],
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    SquareComponent,
+    LetDirective,
+    HeaderComponent,
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   providers: [AppStore],
@@ -16,13 +23,13 @@ import { LetDirective } from '@ngrx/component';
 export class AppComponent implements OnInit {
   private appStore = inject(AppStore);
 
-  public appState$ = this.appStore.getAppState$;
+  public appState$ = this.appStore.appViewModel$;
 
   public ngOnInit(): void {
-    this.appStore.fetchUserDetails();
+    this.appStore.getUserDetails();
   }
 
   public onSquareClicked(index: number): void {
-    this.appStore.onSquareClicked(index);
+    this.appStore.handleSquareClick(index);
   }
 }

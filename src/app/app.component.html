@@ -1,16 +1,6 @@
 <ng-container *ngrxLet="appState$ as appState">
-  <div
-    style="
-      position: fixed;
-      top: 0;
-      width: 100%;
-      padding-top: 12px;
-      background-color: #f1f1f1;
-      padding: 20px;
-      text-align: center;
-    ">
-    <h1>Active User ID: {{ appState.activeUserId }}</h1>
-  </div>
+  <app-header [activeUserId]="appState.activeUserId"></app-header>
+
   <div class="user-details">
     @for (
       content of appState.displayProperties;
@@ -19,7 +9,7 @@
     ) {
       <app-square
         [ngClass]="{
-          'user-details__active': index === appState.activeSquareIndex
+          'user-details--active': index === appState.activeSquareIndex
         }"
         [displayedProperty]="content"
         (click)="onSquareClicked(index)"></app-square>
