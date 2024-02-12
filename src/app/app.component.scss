@@ -1,8 +1,12 @@
 .user-details {
-  margin: 80px 30px 30px 30px;
+  margin: 100px 30px 30px 30px;
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   grid-template-rows: repeat(10, 1fr);
   grid-column-gap: 10px;
   grid-row-gap: 10px;
+
+  &__active {
+    color: green;
+  }
 }

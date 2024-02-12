@@ -16,9 +16,13 @@ import { LetDirective } from '@ngrx/component';
 export class AppComponent implements OnInit {
   private appStore = inject(AppStore);
 
-  public userDetails$ = this.appStore.userDetails$;
+  public appState$ = this.appStore.getAppState$;
 
   public ngOnInit(): void {
-    this.appStore.getUserDetails();
+    this.appStore.fetchUserDetails();
+  }
+
+  public onSquareClicked(index: number): void {
+    this.appStore.onSquareClicked(index);
   }
 }
