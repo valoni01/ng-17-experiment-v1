@@ -10,13 +10,13 @@
 
 ### Run - ng server (To run the app locally)
 
-NB: There is less focus on the style, and also no tests where written. styles were very minimal and variable would have been an overkill (and wanted more focus on the logic).
+NB: There is less focus on the style, and also no tests were written. styles were very minimal and variables would have been overkill (and wanted more focus on the logic).
 
 ### JWT
 
 The JWT is very secure for authentication. a few of the reasons
 
-1.  Token can be set to expire at a specific time. This mean, expired token can't be used by an attacker or someone getting access to your device
+1.  The token can be set to expire at a specific time. This mean, expired token can't be used by an attacker or someone getting access to your device
 2.  Help prevents server side session hijacking since a session state is not needed while using jwt
 3.  Forged token can't be decoded hence, it is easy to know when a token is forged
 4.  Allow the opportunity to use strong cryptographic algorithms and keys
@@ -34,7 +34,7 @@ Attack vectors for HTML messages
    c. Encode user-generated content appropriately before rendering it to the browser. For example, use HTML encoding to render user-generated HTML content as text rather than executing it.
 
 2. HTML Injection:
-   An attacker can can inject HTML code(None scripts) into messages to modify the appearance of the messages or the entire page for the intention of phishing or defacement of the webpage
+   An attacker can inject HTML code(None scripts) into messages to modify the appearance of the messages or the entire page for the intention of phishing or defacement of the webpage
 
    Ways to prevent this:
    a. Set the Content-Type header to prevent browsers from interpreting content as HTML if it's intended to be treated as plain text. This reduces the risk of HTML injection attacks by enforcing the rendering behavior of the browser.
@@ -47,19 +47,19 @@ Attack vectors for HTML messages
 
 Difference Between Mutable and Immutable Objects
 
-First there are two type of data types in Javascript
+First, there are two types of data types in Javascript
 
 1. The primitive types and
-2. The Reference types (Non primitive)
+2. The Reference types (Non-primitive)
 
-The primitive types are stored in the stack in the memory, It is a stack of data with LIFO data structure. This provides very fast access. When storing a primitive type in memory, it adds an element to the top of the stack with the value of the newly created variable. When creating a new variable and assigned the first one to the new one, it adds a new element on top of the stack with the value of the new variable (which is the value of the first created variable).
+The primitive types are stored in the stack in the memory, It is a stack of data with LIFO data structure. This provides very fast access. When storing a primitive type in memory, it adds an element to the top of the stack with the value of the newly created variable. When creating a new variable and assigning the first one to the new one, it adds a new element on top of the stack with the value of the new variable (which is the value of the first created variable).
 
 Reference types:
 Reference types are been stored on the Heap. When storing a reference type in memory, it adds a new element to the top of the stack when its value is a pointer/reference to the address of the object that has been stored on the heap. So if you create a property and assign that property to another new property, the value of the new property will be added to the stack with a reference to the original object on the heap.
 
-The behavior of how this data is stored influence how this data can be modified.
+The behavior of how this data is stored influences how this data can be modified.
 
-For the primitive types, they are immutable, meaning that they can be created once and cannot be changed even though we can assign new values. This lower developer mental burden but also prone to bugs.
+For the primitive types, they are immutable, meaning that they can be created once and cannot be changed even though we can assign new values. This lowers the developer's mental burden but is also prone to bugs.
 
 For Reference types, they are mutable, they can be changed without creating an entirely new value unlike the primitive types
 
@@ -83,7 +83,7 @@ Pros:
 
 Cons:
 
-1. Can't store complex data structure
+1. Can't store a complex data structure
 2. Performance overhead, new instances are created for each modification
 
 ###
@@ -93,9 +93,9 @@ Cons:
 How to achieve immutability in your code
 
 1. use the const keyword to prevent reassignment of values
-2. using the Readonly modifier which can make the properties of an object immutable
+2. using the readonly modifier which can make the properties of an object immutable
 3. Using object.freeze()
-4. use spread operators or object.assign to create copies of objects and array
+4. use spread operators or object.assign() to create copies of objects and array
 
 ###
 
