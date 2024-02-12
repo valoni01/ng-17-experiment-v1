@@ -6,6 +6,7 @@
   grid-column-gap: 10px;
   grid-row-gap: 10px;
 
+  // Todo(Nice to have): create differ variant of the square and move the style there
   &--active {
     color: green;
   }
