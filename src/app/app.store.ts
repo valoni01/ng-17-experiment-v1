@@ -74,7 +74,7 @@ export class AppStore extends ComponentStore<UserState> {
     })
   );
 
-  //update a specific display property based on the index and property to be displayed
+  // update a specific display property based on the index and property to be displayed
   private updateSpecificDisplayPropertiesByIndex = this.updater(
     (state, details: { newDetails: DisplayProperties; index: number }) => {
       state.displayProperties[details.index] = details.newDetails;
@@ -94,7 +94,7 @@ export class AppStore extends ComponentStore<UserState> {
     state => state.displayProperties
   );
 
-  //toggle through the next property to be displayed
+  // toggle through the next property to be displayed
   private toggleDisplayProperty(): DisplayProperty {
     this.currentActiveUserIndexProperty =
       (this.currentActiveUserIndexProperty + 1) % this.displayProperties.length;
