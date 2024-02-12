@@ -1,10 +1,6 @@
 import { TitleCasePipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import {
-  DisplayProperties,
-  DisplayProperty,
-  UserDetails,
-} from 'src/app/app.model';
+import { DisplayProperties } from 'src/app/app.model';
 
 @Component({
   selector: 'app-square',
